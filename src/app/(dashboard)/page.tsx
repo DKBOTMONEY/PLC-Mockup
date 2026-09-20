@@ -1,83 +1,96 @@
-import Link from "next/link";
-import { Cpu, BellRing, Wrench, ArrowRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { getMachines } from "@/actions/machines";
+import { getAlarms } from "@/actions/alarms";
+import { getMaintenanceRecords } from "@/actions/maintenance";
+import { SummaryCards } from "@/components/dashboard/summary-cards";
+import { StatusDonutChart } from "@/components/dashboard/status-donut-chart";
+import { SeverityBarChart } from "@/components/dashboard/severity-bar-chart";
+import { RecentAlarmsWidget } from "@/components/dashboard/recent-alarms-widget";
+import { ExportButton } from "@/components/shared/export-button";
 
-export default function DashboardOverviewPage() {
+export default async function DashboardOverviewPage() {
+  const [machines, alarms, maintenance] = await Promise.all([
+    getMachines(),
+    getAlarms(),
+    getMaintenanceRecords(),
+  ]);
+
+  // Aggregate machine counts
+  const runningCount = machines.filter((m) => m.status === "Running").length;
+  const stopCount = machines.filter((m) => m.status === "Stop").length;
+  const alarmCount = machines.filter((m) => m.status === "Alarm").length;
+  const maintenanceCount = machines.filter((m) => m.status === "Maintenance").length;
+
+  // Aggregate alarm counts
+  const activeAlarms = alarms.filter(
+    (a) => a.status === "Open" || a.status === "In Progress"
+  );
+  const criticalCount = alarms.filter((a) => a.severity === "Critical").length;
+  const highCount = alarms.filter((a) => a.severity === "High").length;
+  const mediumCount = alarms.filter((a) => a.severity === "Medium").length;
+  const lowCount = alarms.filter((a) => a.severity === "Low").length;
+
+  // Aggregate maintenance counts
+  const pendingMaintenance = maintenance.filter(
+    (m) => m.status === "Scheduled" || m.status === "In Progress"
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Title & Global Export Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            ระบบบริหารจัดการเครื่องจักรและงานซ่อมบำรุง
+            ภาพรวมระบบโรงงาน (Executive Dashboard)
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            PLC Alarm & Maintenance Management System &bull; ควบคุมและติดตามสถานะเครื่องจักรโรงงาน
+            รายงานสถิติสถานะเครื่องจักร การแจ้งเตือนเหตุขัดข้อง และแผนงานซ่อมบำรุง
           </p>
+        </div>
+
+        {/* Bonus Feature: Quick Export buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+          <ExportButton
+            data={machines as unknown as Record<string, unknown>[]}
+            filename="machines_export"
+            label="ส่งออกเครื่องจักร (CSV)"
+          />
+          <ExportButton
+            data={alarms as unknown as Record<string, unknown>[]}
+            filename="alarms_export"
+            label="ส่งออก Alarm (CSV)"
+          />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="hover:border-blue-500/50 transition-colors">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center mb-2">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <CardTitle>รายการเครื่องจักร (Machines)</CardTitle>
-            <CardDescription>
-              ตรวจสอบสถานะ ควบคุม และแก้ไขข้อมูลเครื่องจักรหลักทั้งหมด
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link href="/machines">
-              <Button variant="outline" className="w-full justify-between">
-                <span>เข้าสู่หน้าเครื่องจักร</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      {/* KPI Summary Metric Cards */}
+      <SummaryCards
+        totalMachines={machines.length}
+        runningCount={runningCount}
+        stopCount={stopCount}
+        alarmCount={alarmCount}
+        maintenanceCount={maintenanceCount}
+        activeAlarmsCount={activeAlarms.length}
+        pendingMaintenanceCount={pendingMaintenance.length}
+      />
 
-        <Card className="hover:border-red-500/50 transition-colors">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center mb-2">
-              <BellRing className="w-5 h-5" />
-            </div>
-            <CardTitle>การแจ้งเตือนเหตุขัดข้อง (Alarms)</CardTitle>
-            <CardDescription>
-              รับแจ้งเหตุฉุกเฉิน อัปเดตสถานะปัญหา และบันทึกเวลาปิดเคส
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link href="/alarms">
-              <Button variant="outline" className="w-full justify-between">
-                <span>จัดการแจ้งเตือน</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:border-amber-500/50 transition-colors">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-2">
-              <Wrench className="w-5 h-5" />
-            </div>
-            <CardTitle>งานซ่อมบำรุง (Maintenance)</CardTitle>
-            <CardDescription>
-              จัดตารางงานซ่อมบำรุงเชิงป้องกัน และบันทึกผลการปฏิบัติงาน
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link href="/maintenance">
-              <Button variant="outline" className="w-full justify-between">
-                <span>บันทึกงานซ่อม</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <StatusDonutChart
+          running={runningCount}
+          stop={stopCount}
+          alarm={alarmCount}
+          maintenance={maintenanceCount}
+        />
+        <SeverityBarChart
+          critical={criticalCount}
+          high={highCount}
+          medium={mediumCount}
+          low={lowCount}
+        />
       </div>
+
+      {/* Recent Alerts Feed */}
+      <RecentAlarmsWidget alarms={alarms} />
     </div>
   );
 }
