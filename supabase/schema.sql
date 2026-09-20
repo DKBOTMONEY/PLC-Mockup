@@ -135,7 +135,7 @@ RETURNS BOOLEAN AS $$
     SELECT 1 FROM public.profiles
     WHERE id = auth.uid() AND role = 'admin'
   );
-$$ LANGUAGE sql SECURITY DEFINER STABLE;
+$$ LANGUAGE sql SECURITY DEFINER SET search_path = public, pg_temp STABLE;
 
 -- Trigger Function: Auto update updated_at timestamp
 CREATE OR REPLACE FUNCTION public.set_updated_at()
@@ -200,7 +200,7 @@ BEGIN
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- Attach new user trigger to auth.users (if auth schema exists)
 DO $$
@@ -221,7 +221,11 @@ DECLARE
   open_alarm_count INT;
   curr_machine_status machine_status;
 BEGIN
-  target_machine_id := NEW.machine_id;
+  IF TG_OP = 'DELETE' THEN
+    target_machine_id := OLD.machine_id;
+  ELSE
+    target_machine_id := NEW.machine_id;
+  END IF;
 
   -- Get current machine status
   SELECT status INTO curr_machine_status
@@ -250,13 +254,17 @@ BEGIN
     END IF;
   END IF;
 
-  RETURN NEW;
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  ELSE
+    RETURN NEW;
+  END IF;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 DROP TRIGGER IF EXISTS trigger_alarm_machine_sync ON public.alarms;
 CREATE TRIGGER trigger_alarm_machine_sync
-  AFTER INSERT OR UPDATE OF status, machine_id ON public.alarms
+  AFTER INSERT OR UPDATE OF status, machine_id OR DELETE ON public.alarms
   FOR EACH ROW EXECUTE FUNCTION public.sync_machine_status_on_alarm();
 
 -- Trigger Function: Audit Logger (Phase 6 Bonus)
@@ -306,7 +314,7 @@ BEGIN
     RETURN NEW;
   END IF;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- Attach Audit Log triggers to core entities
 DROP TRIGGER IF EXISTS audit_machines_trigger ON public.machines;
