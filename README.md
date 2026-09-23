@@ -8,6 +8,11 @@
 
 ระบบบริหารจัดการเครื่องจักร การแจ้งเตือนเหตุขัดข้อง และแผนงานซ่อมบำรุงเชิงป้องกัน (Industrial Equipment Monitoring & Maintenance Management System) พัฒนาตามเกณฑ์และแผนงาน 7 ระยะ (Phases) จากเอกสาร `alarm_maintenance.md`
 
+📖 **เอกสารส่งมอบโครงการและรายงานฉบับสมบูรณ์:**
+* 📑 [**Project Deliverables & Showcase (เอกสารส่งมอบฉบับเต็ม)**](docs/DELIVERABLES.md)
+* 🤖 [**AI Usage Report (รายงานการประยุกต์ใช้ AI)**](docs/AI_USAGE_REPORT.md)
+* 📸 [**Screenshot Gallery (แกลเลอรีภาพระบบจริง)**](#-แกลเลอรีภาพหน้าจอระบบจริง-system-screenshots-showcase)
+
 ---
 
 ## 🚀 ฟีเจอร์หลักของระบบ (Features)
@@ -60,9 +65,29 @@
 
 ---
 
+## 📸 แกลเลอรีภาพหน้าจอระบบจริง (System Screenshots Showcase)
+
+ระบบได้รับการพัฒนาและทดสอบการทำงานจริงทุกหน้าจอ สามารถดูรายละเอียดการวิเคราะห์เชิงลึกได้ที่ [docs/DELIVERABLES.md](docs/DELIVERABLES.md):
+
+| # | หน้าจอ / ส่วนประกอบระบบ | ภาพตัวอย่าง (Screenshot) | รายละเอียดและ Phase |
+| :-: | :--- | :---: | :--- |
+| **01** | **ระบบยืนยันตัวตน & สิทธิ์ทดสอบ**<br>(Authentication & Demo Accounts) | [![Login](docs/screenshots/01_login_page.png)](docs/screenshots/01_login_page.png) | **Phase 2 & 4:** รองรับ Supabase Auth พร้อมปุ่มกด One-Click Demo บัญชี Admin และ Technician |
+| **02** | **แดชบอร์ดภาพรวมผู้บริหาร**<br>(Executive KPI & Analytics) | [![Dashboard Overview](docs/screenshots/02_dashboard_overview.png)](docs/screenshots/02_dashboard_overview.png) | **Phase 4 & 6:** Real-time KPI Cards, Recharts Donut & Bar Charts, Recent Alarms Feed, และปุ่ม Export CSV |
+| **03** | **โหมดมืดสำหรับห้องควบคุม**<br>(Dark Mode Support) | [![Dark Mode](docs/screenshots/03_dashboard_dark.png)](docs/screenshots/03_dashboard_dark.png) | **Phase 6 Bonus:** รองรับ Theme Toggle สลับ Dark/Light ไร้รอยต่อ ลดความเมื่อยล้าสายตากะกลางคืน |
+| **04** | **จัดการข้อมูลเครื่องจักร**<br>(Machine Master Management) | [![Machine Master](docs/screenshots/04_machine_master.png)](docs/screenshots/04_machine_master.png) | **Phase 3:** แสดงตารางเครื่องจักร สถานะแบบ Badge ค้นหาและกรองแบบ Multi-condition (Admin ควบคุม CRUD) |
+| **05** | **หน้าต่างเพิ่มเครื่องจักรใหม่**<br>(Machine Registration Modal) | [![Machine Modal](docs/screenshots/05_machine_create_modal.png)](docs/screenshots/05_machine_create_modal.png) | **Phase 3:** Modal ตรวจสอบความถูกต้อง (Zod Validation) ป้องกันรหัสเครื่องจักรซ้ำ แจ้งเตือนผ่าน Toast |
+| **06** | **ศูนย์รับแจ้งเหตุขัดข้อง**<br>(Alarm Incident Management) | [![Alarm Management](docs/screenshots/06_alarm_management.png)](docs/screenshots/06_alarm_management.png) | **Phase 3 & 6:** แยกสีตาม Severity, กรองตามวันที่/สถานะ, พร้อม Trigger ปรับสถานะเครื่องจักรเป็น Alarm และ Running อัตโนมัติ |
+| **07** | **บันทึกแผนงานซ่อมบำรุง**<br>(Maintenance Records & Cost) | [![Maintenance](docs/screenshots/07_maintenance_records.png)](docs/screenshots/07_maintenance_records.png) | **Phase 3 & 6:** มอบหมายงานช่างเทคนิค ติดตามสถานะงาน กำหนดวันนัดหมาย และบันทึกค่าใช้จ่ายจริง |
+| **08** | **ประวัติการแก้ไขระบบ**<br>(Audit Trail & JSON Diff) | [![Audit Logs Diff](docs/screenshots/08_audit_logs_diff.png)](docs/screenshots/08_audit_logs_diff.png) | **Phase 6 Bonus:** บันทึกประวัติ INSERT/UPDATE/DELETE พร้อมตัวเปรียบเทียบ JSON Diff สีเขียว/แดง (Admin Only) |
+| **09** | **แผนภาพสถาปัตยกรรมฐานข้อมูล**<br>(Database ER Diagram) | [![ER Diagram](docs/screenshots/09_er_diagram.png)](docs/screenshots/09_er_diagram.png) | **Phase 2 & 7:** แผนภาพความสัมพันธ์ 5 ตารางหลัก Enums และ Foreign Key Constraints บน PostgreSQL |
+
+---
+
 ## 🗄️ โครงสร้างฐานข้อมูล (Database Schema)
 
 ฐานข้อมูลประกอบด้วย 5 ตารางหลัก พร้อมเปิดใช้งาน Row Level Security (RLS) ทุกตาราง:
+
+![Entity Relationship Diagram](docs/screenshots/09_er_diagram.png)
 
 ```
 +------------------+          +------------------------+
