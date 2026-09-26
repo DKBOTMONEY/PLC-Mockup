@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "capture": "node scripts/capture-screenshots.mjs"
+    "capture": "node scripts/capture-screenshots.mjs",
+    "demo": "node scripts/start-demo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
