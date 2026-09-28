@@ -1,15 +1,19 @@
 # Alarm & Maintenance Management System
 
 [![CI Pipeline](https://github.com/DKBOTMONEY/PLC-Mockup/actions/workflows/ci.yml/badge.svg)](https://github.com/DKBOTMONEY/PLC-Mockup/actions)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)](https://plc-tan.vercel.app)
 ![Next.js](https://img.shields.io/badge/Next.js-15.2-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?logo=tailwind-css)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%2B%20Auth-3ecf8e?logo=supabase)
 
+🌐 **Production Website:** [https://plc-tan.vercel.app](https://plc-tan.vercel.app)
+
 ระบบบริหารจัดการเครื่องจักร การแจ้งเตือนเหตุขัดข้อง และแผนงานซ่อมบำรุงเชิงป้องกัน (Industrial Equipment Monitoring & Maintenance Management System) พัฒนาตามเกณฑ์และแผนงาน 7 ระยะ (Phases) จากเอกสาร `alarm_maintenance.md`
 
 📖 **เอกสารส่งมอบโครงการและรายงานฉบับสมบูรณ์:**
 * 📑 [**Project Deliverables & Showcase (เอกสารส่งมอบฉบับเต็ม)**](docs/DELIVERABLES.md)
+* 🎤 [**Presentation Script (สคริปต์การนำเสนอระบบสำหรับ 2 คน)**](docs/PRESENTATION_SCRIPT.md)
 * 🤖 [**AI Usage Report (รายงานการประยุกต์ใช้ AI)**](docs/AI_USAGE_REPORT.md)
 * 📸 [**Screenshot Gallery (แกลเลอรีภาพระบบจริง)**](#-แกลเลอรีภาพหน้าจอระบบจริง-system-screenshots-showcase)
 
@@ -186,13 +190,8 @@ npm run build
 ---
 
 ## 🌐 การ Deploy บน Vercel (Phase 5)
-
-1. นำเข้า (Import) Repository `DKBOTMONEY/PLC-Mockup` บน [Vercel Dashboard](https://vercel.com)
-2. กำหนด **Environment Variables**:
-   * `NEXT_PUBLIC_SUPABASE_URL`
-   * `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   * `SUPABASE_SERVICE_ROLE_KEY`
-3. กด **Deploy** โค้ดจะถูก Build และขึ้น Production ทันที
+* 🚀 **Production URL:** [https://plc-tan.vercel.app](https://plc-tan.vercel.app)
+* ⚙️ **Vercel Project:** [pl-patipan/plc](https://vercel.com/pl-patipan/plc)
 
 ---
 
@@ -202,6 +201,6 @@ npm run build
 - [x] **Phase 2: Database & Authentication** (4 ตารางหลัก + Audit Logs, Foreign Keys, Supabase Auth, RBAC Admin/Technician)
 - [x] **Phase 3: Core Features Development** (Machine Master CRUD, Alarm Incident CRU, Maintenance CRU, Search & Filter)
 - [x] **Phase 4: Dashboard & UI/UX** (Summary metric cards, Recharts visualizations, Responsive UI, Toast feedback)
-- [x] **Phase 5: CI/CD & Deployment** (GitHub Actions `.github/workflows/ci.yml`, Vercel Deployment ready)
+- [x] **Phase 5: CI/CD & Deployment** (GitHub Actions `.github/workflows/ci.yml`, Vercel Deployed: https://plc-tan.vercel.app)
 - [x] **Phase 6: Bonus Features** (Export CSV, Date Range filter, Dark/Light Mode, Dashboard Charts, Audit Trail Viewer)
-- [x] **Phase 7: Documentation & Deliverables** (`README.md`, `supabase/schema.sql`, `docs/AI_USAGE_REPORT.md`)
+- [x] **Phase 7: Documentation & Deliverables** (`README.md`, `supabase/schema.sql`, `docs/AI_USAGE_REPORT.md`, `docs/PRESENTATION_SCRIPT.md`)
