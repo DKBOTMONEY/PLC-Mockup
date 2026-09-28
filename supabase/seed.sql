@@ -126,6 +126,26 @@ SET
   role = EXCLUDED.role,
   updated_at = NOW();
 
+-- Automatically sync any existing auth.users into public.profiles
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') THEN
+    INSERT INTO public.profiles (id, email, full_name, role)
+    SELECT
+      u.id,
+      u.email,
+      COALESCE(u.raw_user_meta_data->>'full_name', split_part(u.email, '@', 1)),
+      COALESCE((u.raw_user_meta_data->>'role')::user_role, 'technician'::user_role)
+    FROM auth.users u
+    ON CONFLICT (id) DO UPDATE
+    SET
+      email = EXCLUDED.email,
+      full_name = EXCLUDED.full_name,
+      role = EXCLUDED.role,
+      updated_at = NOW();
+  END IF;
+END $$;
+
 -- ------------------------------------------------------------------------------
 -- 2. Machines Seed Data
 -- ------------------------------------------------------------------------------
