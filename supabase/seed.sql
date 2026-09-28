@@ -32,8 +32,8 @@ BEGIN
     VALUES (
       '00000000-0000-0000-0000-000000000001',
       '00000000-0000-0000-0000-000000000000',
-      'admin@example.com',
-      crypt('admin123', gen_salt('bf')),
+      'admin@factory.com',
+      crypt('Admin@123456', gen_salt('bf')),
       NOW(),
       '{"provider": "email", "providers": ["email"]}'::jsonb,
       '{"full_name": "Admin System", "role": "admin"}'::jsonb,
@@ -44,6 +44,7 @@ BEGIN
     )
     ON CONFLICT (id) DO UPDATE SET
       email = EXCLUDED.email,
+      encrypted_password = EXCLUDED.encrypted_password,
       raw_user_meta_data = EXCLUDED.raw_user_meta_data;
 
     -- Technician 1 User
@@ -63,11 +64,11 @@ BEGIN
     VALUES (
       '00000000-0000-0000-0000-000000000002',
       '00000000-0000-0000-0000-000000000000',
-      'technician@example.com',
-      crypt('tech123', gen_salt('bf')),
+      'tech1@factory.com',
+      crypt('Tech@123456', gen_salt('bf')),
       NOW(),
       '{"provider": "email", "providers": ["email"]}'::jsonb,
-      '{"full_name": "Somchai Prasert", "role": "technician"}'::jsonb,
+      '{"full_name": "สมชาย ประเสริฐ", "role": "technician"}'::jsonb,
       NOW(),
       NOW(),
       'authenticated',
@@ -75,6 +76,7 @@ BEGIN
     )
     ON CONFLICT (id) DO UPDATE SET
       email = EXCLUDED.email,
+      encrypted_password = EXCLUDED.encrypted_password,
       raw_user_meta_data = EXCLUDED.raw_user_meta_data;
 
     -- Technician 2 User
@@ -94,11 +96,11 @@ BEGIN
     VALUES (
       '00000000-0000-0000-0000-000000000003',
       '00000000-0000-0000-0000-000000000000',
-      'tech2@example.com',
-      crypt('tech123', gen_salt('bf')),
+      'tech2@factory.com',
+      crypt('Tech@123456', gen_salt('bf')),
       NOW(),
       '{"provider": "email", "providers": ["email"]}'::jsonb,
-      '{"full_name": "Wichai Jaidee", "role": "technician"}'::jsonb,
+      '{"full_name": "วิชัย ใจดี", "role": "technician"}'::jsonb,
       NOW(),
       NOW(),
       'authenticated',
@@ -106,6 +108,7 @@ BEGIN
     )
     ON CONFLICT (id) DO UPDATE SET
       email = EXCLUDED.email,
+      encrypted_password = EXCLUDED.encrypted_password,
       raw_user_meta_data = EXCLUDED.raw_user_meta_data;
   END IF;
 END $$;
@@ -113,9 +116,9 @@ END $$;
 -- Populate public.profiles
 INSERT INTO public.profiles (id, email, full_name, role)
 VALUES
-  ('00000000-0000-0000-0000-000000000001', 'admin@example.com', 'Admin System', 'admin'),
-  ('00000000-0000-0000-0000-000000000002', 'technician@example.com', 'Somchai Prasert', 'technician'),
-  ('00000000-0000-0000-0000-000000000003', 'tech2@example.com', 'Wichai Jaidee', 'technician')
+  ('00000000-0000-0000-0000-000000000001', 'admin@factory.com', 'Admin System', 'admin'),
+  ('00000000-0000-0000-0000-000000000002', 'tech1@factory.com', 'สมชาย ประเสริฐ', 'technician'),
+  ('00000000-0000-0000-0000-000000000003', 'tech2@factory.com', 'วิชัย ใจดี', 'technician')
 ON CONFLICT (id) DO UPDATE
 SET
   email = EXCLUDED.email,
